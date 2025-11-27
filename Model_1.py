@@ -35,6 +35,9 @@ total_energy_mix = 1000000  # in MWh
 # Define a large constant for big-M method
 M = 1000000  # Large number to enforce energy production only when selected
 
+# Hours in the year
+hours_per_year = 8760
+
 # Initialize the model
 model = gp.Model("Optimal_Plant_Mix")
 
@@ -51,10 +54,10 @@ binary_vars = model.addVars(tech_names, vtype=GRB.BINARY, name="BinaryProduced")
 # Objective: Minimize the total annualized cost (CAPEX + O&M)
 model.setObjective(
     gp.quicksum(
-        investment_vars[tech] * TECHNOLOGY_DATA[tech]['nominal_investment_total'] for tech in tech_names
-    ) +  # CAPEX cost in MEUR
+        investment_vars[tech] * (TECHNOLOGY_DATA[tech]['nominal_investment_total']/TECHNOLOGY_DATA[tech]['technical_lifetime']) for tech in tech_names
+    ) +  # CAPEX cost in MEUR  --  devided by lifetime to annualize
     gp.quicksum(
-        energy_produced_vars[tech] * TECHNOLOGY_DATA[tech]['variable_om_total'] for tech in tech_names
+        energy_produced_vars[tech] * (TECHNOLOGY_DATA[tech]['variable_om_total']/1000000) for tech in tech_names
     ),  # Variable O&M cost in EUR
     GRB.MINIMIZE
 )
@@ -95,7 +98,7 @@ model.addConstrs(
 
 # 5. The energy produced by each technology cannot exceed its installed capacity
 model.addConstrs(
-    (energy_produced_vars[tech] <= investment_vars[tech] * TECHNOLOGY_DATA[tech]['elec_eff'] * 1000 for tech in tech_names)
+    (energy_produced_vars[tech] <= investment_vars[tech] * hours_per_year * TECHNOLOGY_DATA[tech]['elec_eff'] * 1000 for tech in tech_names)
     , name="MaxCapacity_Constraint"
 )
 
@@ -116,6 +119,6 @@ if model.status == GRB.OPTIMAL:
     print("Optimal plant mix (MW) and energy produced (MWh):")
     for tech in tech_names:
         if energy_produced_vars[tech].x > 0:  # Only print technologies that contribute to the energy mix
-            print(f"{tech}: {investment_vars[tech].x:.2f} MW invested, {energy_produced_vars[tech].x:.2f} MWh produced")
+            print(f"{tech}: {investment_vars[tech].x:.4f} MW invested, {energy_produced_vars[tech].x:.2f} MWh produced")
 else:
     print("Optimization did not succeed:", model.status)
