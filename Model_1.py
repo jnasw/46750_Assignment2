@@ -113,12 +113,14 @@ model.addConstrs(
 model.optimize()
 
 # Output results
+print("\n")
+
 if model.status == GRB.OPTIMAL:
     print("Optimal solution found:")
     print(f"Total annual cost: {model.objVal:.2f} MEUR")
     print("Optimal plant mix (MW) and energy produced (MWh):")
     for tech in tech_names:
         if energy_produced_vars[tech].x > 0:  # Only print technologies that contribute to the energy mix
-            print(f"{tech}: {investment_vars[tech].x:.4f} MW invested, {energy_produced_vars[tech].x:.2f} MWh produced")
+            print(f"{tech}: {investment_vars[tech].x:.4f} MW invested, {energy_produced_vars[tech].x:.2f} MWh produced, {(100*energy_produced_vars[tech].x/total_energy_mix):.2f}% demand covered")
 else:
     print("Optimization did not succeed:", model.status)
