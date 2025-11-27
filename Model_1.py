@@ -58,7 +58,7 @@ model.setObjective(
     ) +  # CAPEX cost in MEUR  --  devided by lifetime to annualize
     gp.quicksum(
         energy_produced_vars[tech] * (TECHNOLOGY_DATA[tech]['variable_om_total']/1000000) for tech in tech_names
-    ),  # Variable O&M cost in EUR
+    ),  # Variable O&M cost in MEUR
     GRB.MINIMIZE
 )
 
@@ -121,6 +121,6 @@ if model.status == GRB.OPTIMAL:
     print("Optimal plant mix (MW) and energy produced (MWh):")
     for tech in tech_names:
         if energy_produced_vars[tech].x > 0:  # Only print technologies that contribute to the energy mix
-            print(f"{tech}: {investment_vars[tech].x:.4f} MW invested, {energy_produced_vars[tech].x:.2f} MWh produced, {(100*energy_produced_vars[tech].x/total_energy_mix):.2f}% demand covered")
+            print(f"{tech}: {investment_vars[tech].x:.4f} MW invested, {energy_produced_vars[tech].x:.2f} MWh produced, covering {(100*energy_produced_vars[tech].x/total_energy_mix):.2f}% of the demand")
 else:
     print("Optimization did not succeed:", model.status)
