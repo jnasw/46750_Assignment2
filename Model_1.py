@@ -98,7 +98,7 @@ model.addConstrs(
 
 # 5. The energy produced by each technology cannot exceed its installed capacity
 model.addConstrs(
-    (energy_produced_vars[tech] <= investment_vars[tech] * hours_per_year * TECHNOLOGY_DATA[tech]['elec_eff'] * 1000 for tech in tech_names)
+    (energy_produced_vars[tech] <= investment_vars[tech] * hours_per_year * TECHNOLOGY_DATA[tech]['elec_eff'] for tech in tech_names)
     , name="MaxCapacity_Constraint"
 )
 
