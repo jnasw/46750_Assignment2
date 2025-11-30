@@ -58,6 +58,9 @@ model.setObjective(
     ) +  # CAPEX cost in MEUR  --  devided by lifetime to annualize
     gp.quicksum(
         energy_produced_vars[tech] * (TECHNOLOGY_DATA[tech]['variable_om_total']/1000000) for tech in tech_names
+    ) +
+    gp.quicksum(
+        (TECHNOLOGY_DATA[tech]['fixed_om_total']/(1000000*TECHNOLOGY_DATA[tech]['technical_lifetime']))*binary_vars[tech] for tech in tech_names
     ),  # Variable O&M cost in MEUR
     GRB.MINIMIZE
 )
