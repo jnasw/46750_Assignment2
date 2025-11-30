@@ -69,7 +69,7 @@
         "Onshore wind": {
             "nominal_investment_total": 1.15,
             "fixed_om_total": 16663,
-            "variable_om_total": 1.98,
+            "variable_om_total": 0,
             "elec_eff": 0.41,
             "technical_lifetime": 30,
             "construction_time": 1.5,
@@ -78,7 +78,7 @@
         "Offshore wind (fixed)": {
             "nominal_investment_total": 2.39,
             "fixed_om_total": 34000,
-            "variable_om_total": 3.45,
+            "variable_om_total": 0,
             "elec_eff": 0.52,
             "technical_lifetime": 30,
             "construction_time": 3.5,
@@ -88,7 +88,7 @@
         "Utility-scale PV": {
             "nominal_investment_total": 0.38,
             "fixed_om_total": 9500,
-            "variable_om_total": 0.5, 
+            "variable_om_total": 0, 
             "elec_eff": 0.16,
             "technical_lifetime": 35,
             "construction_time": 0.5,
