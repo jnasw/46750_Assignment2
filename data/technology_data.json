@@ -10,24 +10,6 @@
     },
 
     "TECHNOLOGY_DATA": {
-        "Gas turbine (simple cycle)": {
-            "nominal_investment_total": 0.6,
-            "fixed_om_total": 19778.73,
-            "variable_om_total": 4.47,
-            "elec_eff": 0.41,
-            "technical_lifetime": 25,
-            "construction_time": 1.5,
-            "total_outage": 0.025
-        },
-        "Natural gas engine plant": {
-            "nominal_investment_total": 0.5,
-            "fixed_om_total": 6646.08,
-            "variable_om_total": 6.38,
-            "elec_eff": 0.48,
-            "technical_lifetime": 25,
-            "construction_time": 1,
-            "total_outage": 0.01
-        },
         "Diesel engine farm": {
             "nominal_investment_total": 0.36,
             "fixed_om_total": 8983.37,
