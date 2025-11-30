@@ -63,13 +63,6 @@ def generate_price_data(experiments):
     return price_data
 
 
-experiments = 3
-
-price_data = generate_price_data(experiments)
-
-print(len(price_data[1])) # price data exp 1
-
-
 
 
 
