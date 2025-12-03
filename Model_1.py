@@ -26,14 +26,16 @@ df_tech = df_tech.reset_index().rename(columns={"index": "Technology"})
 df = pd.merge(df_units, df_tech, left_on="Parameter", right_on="Technology", how="right").drop(columns=["Technology"])
 
 # Define the initial budget (in MEUR)
-initial_budget = 500  # The total available budget for investment in MW
+initial_budget = 5000000  # Assuming an unlimited budget
 
 # Assumed energy demand (in MWh), will not be used for meeting demand directly in this case
 # Instead, we focus on energy mix selection based on budget and cost minimization
-total_energy_mix = 1000000  # in MWh
+market_share = 0.10
+lifetime = 20
+base_demand = market_share * 3_250_000 * lifetime         # MWh
 
 # Define a large constant for big-M method
-M = 1000000  # Large number to enforce energy production only when selected
+M = 10000000  # Large number to enforce energy production only when selected
 
 # Hours in the year
 hours_per_year = 8760
@@ -79,7 +81,7 @@ model.addConstr(
 model.addConstr(
     gp.quicksum(
         energy_produced_vars[tech] for tech in tech_names
-    ) == total_energy_mix,  # Total energy produced should match the target energy mix
+    ) == base_demand,  # Total energy produced should match the target energy mix
     "EnergyMix_Constraint"
 )
 
@@ -95,7 +97,7 @@ model.addConstr(
 # 4. Ensure each selected technology produces at least 10% of the total energy mix
 # Big-M method to link the energy production with the binary variable
 model.addConstrs(
-    (energy_produced_vars[tech] >= 0.1 * total_energy_mix * binary_vars[tech] for tech in tech_names)
+    (energy_produced_vars[tech] >= 0.1 * base_demand * binary_vars[tech] for tech in tech_names)
     , name="MinTechnologyContribution"
 )
 
@@ -124,6 +126,6 @@ if model.status == GRB.OPTIMAL:
     print("Optimal plant mix (MW) and energy produced (MWh):")
     for tech in tech_names:
         if energy_produced_vars[tech].x > 0:  # Only print technologies that contribute to the energy mix
-            print(f"{tech}: {investment_vars[tech].x:.4f} MW invested, {energy_produced_vars[tech].x:.2f} MWh produced, covering {(100*energy_produced_vars[tech].x/total_energy_mix):.2f}% of the demand")
+            print(f"{tech}: {investment_vars[tech].x:.4f} MW invested, {energy_produced_vars[tech].x:.2f} MWh produced, covering {(100*energy_produced_vars[tech].x/base_demand):.2f}% of the demand")
 else:
     print("Optimization did not succeed:", model.status)
