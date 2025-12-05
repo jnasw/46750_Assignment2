@@ -438,7 +438,14 @@ def _plot_installed_capacity(time_periods, capacity_dict):
     fig, ax = plt.subplots(figsize=(12, 6))
     display_periods = [t + 1 for t in time_periods]
 
-    tech_list = list(capacity_dict.keys())
+    # Sort technologies by when they first get capacity
+    def first_nonzero_period(tech):
+        for i, val in enumerate(capacity_dict[tech]):
+            if val > 0:
+                return time_periods[i]
+        return float('inf')  # If never has capacity, put at end
+
+    tech_list = sorted(capacity_dict.keys(), key=first_nonzero_period)
     values = [capacity_dict[tech] for tech in tech_list]
     colors = [TECH_COLORS.get(tech, "#CCCCCC") for tech in tech_list]
 
