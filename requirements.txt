@@ -6,3 +6,4 @@ pyarrow
 plotly
 gurobipy==12.0.1
 seaborn
+openpyxl
