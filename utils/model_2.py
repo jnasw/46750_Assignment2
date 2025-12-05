@@ -431,25 +431,21 @@ def _extract_results(model, params_dict):
     }
 
 
-def _plot_installed_capacity(time_periods, capacity_dict, tech_names=TECH_NAMES):
+def _plot_installed_capacity(time_periods, capacity_dict):
     """
     Stacked area plot of installed capacity over time.
     """
     fig, ax = plt.subplots(figsize=(12, 6))
-
-    cap_plot = {tech: [capacity_dict[tech,t].X for t in time_periods] 
-            for tech in tech_names}
-
     display_periods = [t + 1 for t in time_periods]
 
     # Sort technologies by when they first get capacity
     def first_nonzero_period(tech):
-        for i, val in enumerate(cap_plot[tech]):
+        for i, val in enumerate(capacity_dict[tech]):
             if val > 0:
                 return i
         return float('inf')  # If never has capacity, put at end
 
-    tech_list = sorted(cap_plot.keys(), key=first_nonzero_period)
+    tech_list = sorted(capacity_dict.keys(), key=first_nonzero_period)
     values = [capacity_dict[tech] for tech in tech_list]
     colors = [TECH_COLORS.get(tech, "#CCCCCC") for tech in tech_list]
 
