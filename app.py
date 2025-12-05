@@ -43,7 +43,7 @@ with tab1:
             "Investment Budget (MEUR)",
             min_value=0.0,
             max_value=2000.0,
-            value=500.0,
+            value=1000.0,
             step=10.0,
         )
 
@@ -51,7 +51,7 @@ with tab1:
             "Total Energy Demand (MWh)",
             min_value=0.0,
             max_value=20_000_000.0,
-            value=1_000_000.0,
+            value=3_525_000.0,
             step=100_000.0,
         )
 
@@ -128,7 +128,7 @@ with tab2:
             "Initial Budget (MEUR)",
             min_value=0.0,
             max_value=5000.0,
-            value=100.0,
+            value=150.0,
             step=10.0,
         )
 
@@ -136,7 +136,7 @@ with tab2:
             "Market Share",
             min_value=0.0,
             max_value=1.0,
-            value=0.35,
+            value=0.10,
             step=0.05,
         )
 
@@ -194,7 +194,7 @@ with tab2:
             st.success("Model 2 — optimal solution found!")
 
             # KPIs
-            k1, k2, k3 = st.columns(3)
+            k1, k2, k3, k4 = st.columns(4)
 
             k1.metric(
                 "Total Profit",
@@ -207,6 +207,10 @@ with tab2:
             k3.metric(
                 "Total Revenue",
                 f"{results2['kpis']['total_revenue']:.2f} MEUR",
+            )
+            k4.metric(
+                "Total Installed Capacity",
+                f"{results2['kpis']['total_capacity_end']:.2f} MW",
             )
 
     
@@ -269,7 +273,7 @@ with tab3:
             "Market Share",
             min_value=0.0,
             max_value=1.0,
-            value=0.35,
+            value=0.10,
             step=0.05,
             key="m3_market_share",
         )

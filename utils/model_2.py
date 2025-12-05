@@ -341,11 +341,17 @@ def _extract_results(model, params_dict):
             t = int(inside)
             capex_cost[t] = var
 
+
     # ----- KPIs -----
     time_idx = time_periods
     total_profit = sum(rev[t].X - op[t].X - fix[t].X - capex_cost[t].X for t in time_idx)
     final_budget = bud[num_periods - 1].X
     total_revenue = sum(rev[t].X for t in time_idx)
+    final_year = num_periods - 1
+    total_capacity_end = sum(
+        cap[(tech, final_year)].X
+        for tech in TECH_NAMES
+    )
 
     # ----- Tables -----
     capacity_df = pd.DataFrame({
@@ -409,6 +415,7 @@ def _extract_results(model, params_dict):
             "total_profit": total_profit,
             "final_budget": final_budget,
             "total_revenue": total_revenue,
+            "total_capacity_end": total_capacity_end,
         },
         "tables": {
             "budget": budget_df.round(1),

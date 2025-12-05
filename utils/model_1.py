@@ -50,6 +50,12 @@ def run_model_1(params):
     
     hours_per_year = 8760
     M = 1_000_000  # big-M
+
+    print("Running Model 1 with parameters:")
+    print(f"  Budget: {budget} MEUR")
+    print(f"  Total Demand: {total_demand} MWh")
+    print(f"  Minimum Number of Technologies: {min_num_tech}")
+    print(f"  Minimum Share per Technology: {min_share}")
     
     # -----------------------------
     # Build model
