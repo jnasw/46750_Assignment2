@@ -431,31 +431,29 @@ def _extract_results(model, params_dict):
     }
 
 
-def _plot_installed_capacity(time_periods, capacity_dict):
+def _plot_installed_capacity(time_periods, capacity_dict, tech_names=TECH_NAMES):
     """
     Stacked area plot of installed capacity over time.
     """
     fig, ax = plt.subplots(figsize=(12, 6))
 
+    cap_plot = {tech: [capacity_dict[tech,t].X for t in time_periods] 
+            for tech in tech_names}
+
     display_periods = [t + 1 for t in time_periods]
 
-    tech_list = list(capacity_dict.keys())
+    # Sort technologies by when they first get capacity
+    def first_nonzero_period(tech):
+        for i, val in enumerate(cap_plot[tech]):
+            if val > 0:
+                return i
+        return float('inf')  # If never has capacity, put at end
+
+    tech_list = sorted(cap_plot.keys(), key=first_nonzero_period)
     values = [capacity_dict[tech] for tech in tech_list]
     colors = [TECH_COLORS.get(tech, "#CCCCCC") for tech in tech_list]
-    
-    # Calculate when each technology reaches its maximum capacity
-    max_period_index = [np.argmax(v) for v in values]
-    
-    # Sort technologies: those reaching max capacity later appear on top
-    sorted_indices = sorted(range(len(tech_list)), key=lambda i: max_period_index[i])
-    
-    # Reorder technologies, values, and colors
-    tech_list_sorted = [tech_list[i] for i in sorted_indices]
-    values_sorted = [values[i] for i in sorted_indices]
-    colors_sorted = [TECH_COLORS.get(tech_list[i], "#CCCCCC") for i in sorted_indices]
 
-
-    ax.stackplot(display_periods, values_sorted, labels=tech_list_sorted, colors=colors_sorted, alpha=0.9)
+    ax.stackplot(display_periods, values, labels=tech_list, colors=colors, alpha=0.9)
 
     ax.set_title("Installed Capacity Over Time")
     ax.set_xlabel("Year")
