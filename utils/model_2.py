@@ -438,20 +438,12 @@ def _plot_installed_capacity(time_periods, capacity_dict):
     fig, ax = plt.subplots(figsize=(12, 6))
     display_periods = [t + 1 for t in time_periods]
 
-    # Sort technologies by when they first get capacity
-    def first_nonzero_period(tech):
-        values = capacity_dict[tech]
-        for i, val in enumerate(values):
-            if val > 1e-6:  # Small threshold for numerical precision
-                return i
-        return float('inf')  # If never has capacity, put at end
-
-    tech_list = sorted(capacity_dict.keys(), key=first_nonzero_period)
+    tech_list = list(capacity_dict.keys())
     values = [capacity_dict[tech] for tech in tech_list]
     colors = [TECH_COLORS.get(tech, "#CCCCCC") for tech in tech_list]
 
     ax.stackplot(display_periods, values, labels=tech_list, colors=colors, alpha=0.9)
-    
+
     ax.set_title("Installed Capacity Over Time")
     ax.set_xlabel("Year")
     ax.set_xticks(range(0, len(time_periods) + 2, 2))
