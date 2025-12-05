@@ -442,8 +442,20 @@ def _plot_installed_capacity(time_periods, capacity_dict):
     tech_list = list(capacity_dict.keys())
     values = [capacity_dict[tech] for tech in tech_list]
     colors = [TECH_COLORS.get(tech, "#CCCCCC") for tech in tech_list]
+    
+    # Calculate when each technology reaches its maximum capacity
+    max_period_index = [np.argmax(v) for v in values]
+    
+    # Sort technologies: those reaching max capacity later appear on top
+    sorted_indices = sorted(range(len(tech_list)), key=lambda i: max_period_index[i])
+    
+    # Reorder technologies, values, and colors
+    tech_list_sorted = [tech_list[i] for i in sorted_indices]
+    values_sorted = [values[i] for i in sorted_indices]
+    colors_sorted = [TECH_COLORS.get(tech_list[i], "#CCCCCC") for i in sorted_indices]
 
-    ax.stackplot(display_periods, values, labels=tech_list, colors=colors, alpha=0.9)
+
+    ax.stackplot(display_periods, values_sorted, labels=tech_list_sorted, colors=colors_sorted, alpha=0.9)
 
     ax.set_title("Installed Capacity Over Time")
     ax.set_xlabel("Year")
