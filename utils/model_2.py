@@ -442,7 +442,7 @@ def _plot_installed_capacity(time_periods, capacity_dict):
     def first_nonzero_period(tech):
         for i, val in enumerate(capacity_dict[tech]):
             if val > 0:
-                return i
+                return time_periods[i]
         return float('inf')  # If never has capacity, put at end
 
     tech_list = sorted(capacity_dict.keys(), key=first_nonzero_period)
