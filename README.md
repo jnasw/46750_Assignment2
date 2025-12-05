@@ -37,6 +37,7 @@ The repository includes all code required to reproduce the results presented in 
 ├── model_1.ipynb           # Deterministic baseline model
 ├── model_2.ipynb           # Dynamic multi-period investment model
 ├── model_3.ipynb           # Scenario-based & robustness model
+├── model_comparison.ipynb  # Visualisations for the report
 │
 ├── app.py                  # Streamlit dashboard
 ├── requirements.txt        # Python dependencies
