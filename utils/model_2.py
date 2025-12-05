@@ -478,17 +478,16 @@ def _plot_financial_flows(time_periods, revenue, op_cost, capex_cost):
            color="tab:green", 
            width=bar_width)
 
-    ax.bar(x, op, 
-           label="OPEX (–)", 
-           color="tab:orange", 
-           width=bar_width)
-
     ax.bar(x, cap, 
-           label="CAPEX (–)",
-           bottom=op,  # Stack CAPEX on top of OPEX 
+           label="CAPEX (–)", 
            color="tab:blue", 
            width=bar_width)
     
+    ax.bar(x, op, 
+           label="OPEX (–)", 
+           bottom=cap,  # Stack OPEX on top of CAPEX
+           color="tab:orange", 
+           width=bar_width)
 
     # Zero line
     ax.axhline(0, color="black", linewidth=1)
