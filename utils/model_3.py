@@ -526,9 +526,16 @@ def _extract_results(model, v, tech_names, time_periods, scenarios, price_baseli
         np.mean([budget[time_periods[-1], s].X for s in scenarios])
     )
 
-    # Expected revenue over all years & scenarios
+    # Expected mean revenue over all years & scenarios
+    # expected_revenue = float(
+    #    np.mean([revenue[t, s].X for t in time_periods for s in scenarios])
+    #)
+    # Expected TOTAL revenue over full horizon (MEUR)
     expected_revenue = float(
-        np.mean([revenue[t, s].X for t in time_periods for s in scenarios])
+        np.mean([
+            sum(revenue[t, s].X for t in time_periods)
+            for s in scenarios
+        ])
     )
 
     # Final-year installed capacity (MW)
